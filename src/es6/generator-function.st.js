@@ -10,9 +10,25 @@ function* makeArray(size) {
     return;
 }
 
+function forEachYeild(itr, fn) {
+    let res = itr.next()
+    return new Promise(async (resolve) => {
+        while(true) {
+            if(res.done) {
+                break;
+            } else {
+                fn(await res.value)
+            }
+            res = itr.next()
+        }
+        resolve(res);
+    })
+}
+
 class GeneratorFunTestStory extends Component {
     state = {
-        arr: []
+        arr: [],
+        done: false
     }
 
     runPoll(itr) {
@@ -30,12 +46,21 @@ class GeneratorFunTestStory extends Component {
     }
 
     componentDidMount() {
-        this.runPoll()
+        forEachYeild(makeArray(10), (value) => {
+            this.setState({
+                arr: value || []
+            })
+        }).then(() => {
+            this.setState({
+                done: true
+            })
+        })
     }
 
     render = () => <div>
         <p>Generator function yields new values in an array every second.</p>
         <pre>{this.state.arr.join(' ')}</pre>
+        {this.state.done && <p>Done!!!</p>}
     </div>
 }
 
