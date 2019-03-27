@@ -1,11 +1,11 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { storiesOf } from '@storybook/react';
 
 function* makeArray(size) {
     let arr = [];
     for (let i = 0; i < size; i++) {
         arr.push(i + 1);
-        yield delay(1000).then(() => arr);
+        yield arr;
     }
     return;
 }
@@ -17,7 +17,8 @@ function forEachYeild(itr, fn) {
             if(res.done) {
                 break;
             } else {
-                fn(await res.value)
+                fn(res.value)
+                await delay(500)
             }
             res = itr.next()
         }
@@ -29,20 +30,6 @@ class GeneratorFunTestStory extends Component {
     state = {
         arr: [],
         done: false
-    }
-
-    runPoll(itr) {
-        if (!itr) {
-            itr = makeArray(10);
-        }
-
-        const res = itr.next();
-        if (!res.done) {
-            res.value.then((arr) => {
-                this.setState({ arr: arr || [] })
-                this.runPoll(itr);
-            });
-        }
     }
 
     componentDidMount() {
