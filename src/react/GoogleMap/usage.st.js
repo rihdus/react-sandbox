@@ -41,7 +41,7 @@ class App extends React.Component {
   }
 }
 
-const AppWithGoogleMap = withGoogleMap();
+const AppWithGoogleMap = withGoogleMap(App, '');
 
 storiesOf('React - Portal', module)
-  .add('GoogleMap', () => <AppWithGoogleMap><App/></AppWithGoogleMap>);
+  .add('GoogleMap', () => <AppWithGoogleMap/>);
